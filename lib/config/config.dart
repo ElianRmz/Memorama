@@ -3,9 +3,10 @@ library config.globals;
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/utilis/detalles.dart';
-
+import 'package:flutter/foundation.dart';
 import '../widgets/tablero.dart';
 
+ValueNotifier<int> moves = ValueNotifier<int>(0);
 
 enum Nivel {facil, medio, dificil,imposible}
 
@@ -73,6 +74,7 @@ List<Detalles> botones =[
 List<String> baraja =[];
 List<FlipCardController> controles =[];
 List<bool> estados = [];
+
 
 void barajar(Nivel nivel){
   int size =0;
