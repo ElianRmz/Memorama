@@ -39,7 +39,7 @@ class _ParrillaState extends State<Parrilla> {
     habilitado = false;
     juan = true;
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         for (var control in controles) {
           control.toggleCard();
