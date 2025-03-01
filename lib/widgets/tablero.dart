@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../config/config.dart';
 import 'stats.dart';
@@ -10,6 +11,7 @@ class Tablero extends StatefulWidget {
   const Tablero(this.nivel, {Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _TableroState createState() => _TableroState();
 }
 
@@ -54,6 +56,7 @@ class _TableroState extends State<Tablero> {
     });
   }
 
+  // ignore: non_constant_identifier_names
   void _maldito_elian_pone_bien_feas_los_nombre_de_las_variables_y_huele_feo() {
     if (parones == baraja.length ~/ 2) {
       _krono?.cancel();
@@ -64,19 +67,22 @@ class _TableroState extends State<Tablero> {
   void _mensajeVictoria() {
     showDialog(
       context: context,
-      barrierDismissible: false, // Evita que se cierre con un clic fuera del diálogo
+      barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("¡Felicidades! 🎉"),
+        return CupertinoAlertDialog(
+          title: const Text("¡Felicidades! "),
           content: Text(
               "Has completado el nivel en $secs segundos con $moves movimientos."),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Cerrar el diálogo
-                Navigator.pop(context); // Regresar a la pantalla de inicio
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
-              child: const Text("Ir al inicio"),
+              child: const Text(
+                "Inicio",
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
           ],
         );
