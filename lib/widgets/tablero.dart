@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:memo/widgets/menu.dart';
 import '../config/config.dart';
 import 'stats.dart';
 import 'parrilla.dart';
@@ -95,6 +96,9 @@ class _TableroState extends State<Tablero> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Nivel: ${widget.nivel?.name}"),
+        actions: [
+          Menu()
+        ],
       ),
       body: Column(
         children: [
