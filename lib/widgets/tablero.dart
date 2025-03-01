@@ -40,7 +40,10 @@ class _TableroState extends State<Tablero> {
 
   @override
   void dispose() {
-    _krono?.cancel();
+    if (_krono != null) {
+      _krono!.cancel();
+      _krono = null;
+    }
     super.dispose();
   }
 
@@ -77,8 +80,9 @@ class _TableroState extends State<Tablero> {
           actions: [
             TextButton(
               onPressed: () {
+                _krono?.cancel();
                 Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
               },
               child: const Text(
                 "Inicio",
@@ -97,7 +101,11 @@ class _TableroState extends State<Tablero> {
       appBar: AppBar(
         title: Text("Nivel: ${widget.nivel?.name}"),
         actions: [
-          Menu()
+          Menu(
+            onExit: () {
+              _krono?.cancel();
+            },
+          )
         ],
       ),
       body: Column(
