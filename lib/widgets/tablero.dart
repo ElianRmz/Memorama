@@ -40,6 +40,7 @@ class _TableroState extends State<Tablero> {
     _krono?.cancel();
     super.dispose();
   }
+
   void movio() {
     setState(() {
       moves++;
@@ -49,7 +50,38 @@ class _TableroState extends State<Tablero> {
   void encontro() {
     setState(() {
       parones++;
+      _maldito_elian_pone_bien_feas_los_nombre_de_las_variables_y_huele_feo();
     });
+  }
+
+  void _maldito_elian_pone_bien_feas_los_nombre_de_las_variables_y_huele_feo() {
+    if (parones == baraja.length ~/ 2) {
+      _krono?.cancel();
+      _mensajeVictoria();
+    }
+  }
+
+  void _mensajeVictoria() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Evita que se cierre con un clic fuera del diálogo
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("¡Felicidades! 🎉"),
+          content: Text(
+              "Has completado el nivel en $secs segundos con $moves movimientos."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Cerrar el diálogo
+                Navigator.pop(context); // Regresar a la pantalla de inicio
+              },
+              child: const Text("Ir al inicio"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
