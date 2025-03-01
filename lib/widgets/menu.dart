@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatelessWidget {
-  const Menu({Key? key}) : super(key: key);
+  final VoidCallback? onExit;
+  
+  const Menu({Key? key, this.onExit}) : super(key: key);
 
   void _showCupertinoMenu(BuildContext context) {
     showCupertinoModalPopup(
@@ -26,7 +28,13 @@ class Menu extends StatelessWidget {
           ),
           CupertinoActionSheetAction(
             onPressed: () {
-              Navigator.pop(context);
+              // Call the onExit callback to cancel the timer
+              if (onExit != null) {
+                onExit!();
+              }
+              Navigator.pop(context); // Close the menu
+              // Navigate to home screen using named route
+              Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
             },
             child: const Text("Inicio", style: TextStyle(color: Colors.blue)),
           ),
