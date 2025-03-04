@@ -20,6 +20,7 @@ class _TableroState extends State<Tablero> {
   int moves = 0;
   int parones = 0;
   int secs = 0;
+  Key _parrillaKey = UniqueKey();
   Timer? _krono;
 
   // Índice de la barra inferior (0 = Game)
@@ -68,6 +69,10 @@ class _TableroState extends State<Tablero> {
   }
 
   void _mensajeVictoria() {
+    if (_krono != null) {
+      _krono!.cancel();
+      _krono = null;
+    }
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -79,7 +84,6 @@ class _TableroState extends State<Tablero> {
           actions: [
             TextButton(
               onPressed: () {
-                _krono?.cancel();
                 Navigator.pop(context);
                 Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
               },
@@ -93,7 +97,30 @@ class _TableroState extends State<Tablero> {
       },
     );
   }
+  void _resetGame() {
+    if (_krono != null) {
+      _krono!.cancel();
+      _krono = null;
+    }
 
+    setState(() {
+      moves = 0;
+      parones = 0;
+      secs = 0;
+
+      // Revisar si se tiene que limpiar o puedo resetearlo con lo de arriba.
+      controles.clear();
+      estados.clear();
+      baraja.clear();
+
+      _parrillaKey = UniqueKey(); // Se hace otra key para reiniciar
+
+      // Restart the timer after a short delay
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _zomber();
+      });
+    });
+  }
   /// Maneja los taps de la barra inferior
   void _onBottomTap(int index) {
     // Si es el botón "Game" (índice 0) y ya estamos en 0, no hacemos nada
@@ -133,8 +160,14 @@ class _TableroState extends State<Tablero> {
           // Mantienes tu botón "Menu" con su callback
           Menu(
             onExit: () {
-              _krono?.cancel();
+              // Cancel the timer when exiting
+              if (_krono != null) {
+                _krono!.cancel();
+                _krono = null;
+              }
             },
+            nivel: widget.nivel,
+            onReset: _resetGame,
           )
         ],
       ),
@@ -150,6 +183,7 @@ class _TableroState extends State<Tablero> {
           Expanded(
             child: Parrilla(
               nivel: widget.nivel,
+              key: _parrillaKey,
               volt: movio,
               bonjorno: encontro,
               fini: fini,

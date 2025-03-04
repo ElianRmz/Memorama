@@ -55,6 +55,33 @@ class _ParrillaState extends State<Parrilla> {
       });
     });
   }
+  void resetGame() {
+    setState(() {
+      prevclicked = -1;
+      flag = false;
+      habilitado = false;
+      juan = true;
+      volteon = true;
+
+      Future.delayed(const Duration(milliseconds: 200), () {
+        setState(() {
+          for (var control in controles) {
+            if (control.state?.isFront == false) {
+              control.toggleCard();
+            }
+          }
+          juan = false;
+          volteon = false;
+        });
+        widget.fini();
+        Future.delayed(const Duration(seconds: 300), () {
+          setState(() {
+            habilitado = true;
+          });
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
