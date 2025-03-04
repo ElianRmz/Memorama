@@ -31,6 +31,16 @@ class Menu extends StatelessWidget {
               style: TextStyle(color: Colors.blue),
             ),
           ),
+          CupertinoActionSheetAction(
+              onPressed: () {
+                if(onExit != null) onExit!();
+                Navigator.pop(context);
+                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+              },
+              child: const Text(
+                "Salir",
+                style: TextStyle(color: Colors.red),
+              ))
         ],
         cancelButton: CupertinoActionSheetAction(
           onPressed: () => Navigator.pop(context),
@@ -42,29 +52,29 @@ class Menu extends StatelessWidget {
   }
   Future<bool> _mensajeConfirmacion(BuildContext context, String s) async {
     return await showDialog(
-        context: context,
-        // barrierDismissible: false,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: const Text("Confirmación"),
-            content: Text(s),
-            actions: [
-              CupertinoDialogAction(
-                  child: const Text(
-                    "Aceptar",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () => Navigator.pop(context, true)),
-              CupertinoDialogAction(
-                child: const Text(
-                  "Cancelar",
-                  style: TextStyle(color: Colors.blue),
-                ),
-                onPressed: () => Navigator.pop(context, false),
-              )
-            ],
-          );
-        }) ??
+            context: context,
+            // barrierDismissible: false,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text("Confirmación"),
+                content: Text(s),
+                actions: [
+                  CupertinoDialogAction(
+                      child: const Text(
+                        "Aceptar",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () => Navigator.pop(context, true)),
+                  CupertinoDialogAction(
+                    child: const Text(
+                      "Cancelar",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onPressed: () => Navigator.pop(context, false),
+                  )
+                ],
+              );
+            }) ??
         false;
   }
 
