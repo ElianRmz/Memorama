@@ -131,24 +131,7 @@ class _TableroState extends State<Tablero> {
     setState(() {
       _selectedIndex = index;
     });
-
-    // Puedes poner la lógica que necesites según el botón
-    switch (index) {
-      case 1:
-        debugPrint("Botón Salir pulsado");
-        // Por ejemplo: Navigator.pop(context);
-        break;
-      case 2:
-        debugPrint("Botón Reiniciar pulsado");
-        // Lógica para reiniciar, si corresponde
-        break;
-      case 3:
-        debugPrint("Botón Juego nuevo pulsado");
-        // Lógica para juego nuevo
-        break;
-      default:
-        break;
-    }
+    
   }
 
   @override
