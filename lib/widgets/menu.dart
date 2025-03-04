@@ -23,8 +23,14 @@ class Menu extends StatelessWidget {
         actions: [
           CupertinoActionSheetAction(
             onPressed: () async {
-              Navigator.pop(context);
-              if (await _mensajeConfirmacion(context, "¿Deseas reiniciar el juego?")) if (onReset != null) onReset!();
+              dynamic confirmacion = await _mensajeConfirmacion(
+                  context, "¿Deseas reiniciar el juego?");
+              if (confirmacion) {
+                if (onReset != null) {
+                  onReset!();
+                }
+                Navigator.pop(context);
+              }
             },
             child: const Text(
               "Reiniciar",
@@ -32,10 +38,26 @@ class Menu extends StatelessWidget {
             ),
           ),
           CupertinoActionSheetAction(
-              onPressed: () {
-                if(onExit != null) onExit!();
-                Navigator.pop(context);
-                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+              onPressed: () async {
+                dynamic confirmacion = await _mensajeConfirmacion(
+                    context, "Desea regresar al incio?");
+                if (confirmacion) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(
+                "Consultar",
+                style: TextStyle(color: Colors.blue),
+              )),
+          CupertinoActionSheetAction(
+              onPressed: () async {
+                dynamic confirmacion = await _mensajeConfirmacion(
+                    context, "Desea regresar al incio?");
+                if (confirmacion) {
+                  if (onExit != null) onExit!();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('home', (route) => false);
+                }
               },
               child: const Text(
                 "Salir",
@@ -45,7 +67,10 @@ class Menu extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           onPressed: () => Navigator.pop(context),
           isDestructiveAction: true,
-          child: const Text("Cancelar"),
+          child: Text(
+            "Cancelar",
+            style: TextStyle(color: Colors.grey[800]),
+          ),
         ),
       ),
     );
@@ -84,5 +109,9 @@ class Menu extends StatelessWidget {
       child: const Icon(CupertinoIcons.ellipsis), // Icono de menú
       onPressed: () => _showCupertinoMenu(context),
     );
+  }
+
+  void enviarBD() async {
+    // Sqlite.opendb();
   }
 }
