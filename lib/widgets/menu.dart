@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/config/config.dart';
+import 'package:memo/widgets/consulta.dart';
 
 class Menu extends StatelessWidget {
   final VoidCallback? onExit;
@@ -42,7 +43,11 @@ class Menu extends StatelessWidget {
                 dynamic confirmacion = await _mensajeConfirmacion(
                     context, "Desea regresar al incio?");
                 if (confirmacion) {
+                  if (onExit != null) onExit!();
                   Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Consulta()));
                 }
               },
               child: Text(
@@ -75,6 +80,7 @@ class Menu extends StatelessWidget {
       ),
     );
   }
+
   Future<bool> _mensajeConfirmacion(BuildContext context, String s) async {
     return await showDialog(
             context: context,
