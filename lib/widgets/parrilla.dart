@@ -75,7 +75,7 @@ class _ParrillaState extends State<Parrilla> {
           volteon = false;
         });
         widget.fini();
-        Future.delayed(const Duration(seconds: 300), () {
+        Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
             habilitado = true;
           });
