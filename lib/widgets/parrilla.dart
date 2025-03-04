@@ -58,67 +58,67 @@ class _ParrillaState extends State<Parrilla> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: baraja.length,
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    return SingleChildScrollView(
+      child: GridView.count(
         crossAxisCount: 4,
-      ),
-      itemBuilder: (context, index) {
-        return FlipCard(
-          onFlip: () {
-            if (!volteon && (habilitado ?? false)) {
-              widget.volt();
-            } else {
-              return;
-            }
-
-            if (!flag!) {
-              prevclicked = index;
-              estados[index] = false;
-            } else {
-              setState(() {
-                habilitado = false;
-              });
-            }
-            flag = !flag!;
-            estados[index] = false;
-
-            if (prevclicked != index && !flag!) {
-              if (baraja.elementAt(index) == baraja.elementAt(prevclicked!)) {
-                debugPrint("clicked: Son iguales");
-                widget.bonjorno();
-                setState(() {
-                  habilitado = true;
-                });
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children: List.generate(baraja.length, (index) {
+          return FlipCard(
+            controller: controles[index],
+            onFlip: () {
+              if (!volteon && (habilitado ?? false)) {
+                widget.volt();
               } else {
-                Future.delayed(const Duration(seconds: 1), () {
-                  setState(() {
-                    habilitado = false;
-                  });
-                  controles.elementAt(prevclicked!).toggleCard();
-                  estados[prevclicked!] = true;
-                  prevclicked = index;
-                  controles.elementAt(index).toggleCard();
-                  estados[index] = true;
+                return;
+              }
+
+              if (!flag!) {
+                prevclicked = index;
+                estados[index] = false;
+              } else {
+                setState(() {
+                  habilitado = false;
+                });
+              }
+              flag = !flag!;
+              estados[index] = false;
+
+              if (prevclicked != index && !flag!) {
+                if (baraja.elementAt(index) == baraja.elementAt(prevclicked!)) {
+                  debugPrint("clicked: Son iguales");
+                  widget.bonjorno();
                   setState(() {
                     habilitado = true;
                   });
+                } else {
+                  Future.delayed(const Duration(seconds: 1), () {
+                    setState(() {
+                      habilitado = false;
+                    });
+                    controles.elementAt(prevclicked!).toggleCard();
+                    estados[prevclicked!] = true;
+                    prevclicked = index;
+                    controles.elementAt(index).toggleCard();
+                    estados[index] = true;
+                    setState(() {
+                      habilitado = true;
+                    });
+                  });
+                }
+              } else {
+                setState(() {
+                  habilitado = true;
                 });
               }
-            } else {
-              setState(() {
-                habilitado = true;
-              });
-            }
-          },
-          fill: Fill.fillBack,
-          controller: controles[index],
-          flipOnTouch: (habilitado ?? false) && !volteon ? estados[index] : false,
-          front: Image.asset(baraja[index]),
-          back: Image.asset("images/quest.png"),
-        );
-      },
+            },
+            fill: Fill.fillBack,
+            flipOnTouch: (habilitado ?? false) && !volteon ? estados[index] : false,
+            front: Image.asset(baraja[index]),
+            back: Image.asset("images/quest.png"),
+          );
+        }),
+      ),
     );
   }
 }

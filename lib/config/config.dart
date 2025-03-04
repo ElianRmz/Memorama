@@ -93,7 +93,12 @@ void barajar(Nivel nivel){
       size =36;
       break;
   }
-  for(int i=0;i<size;i++){
+  // Reinicia las listas para evitar acumulación de estados previos
+  controles.clear();
+  estados.clear();
+
+  // Ahora sí agregas exactamente 'size' controladores y estados
+  for (int i = 0; i < size; i++) {
     controles.add(FlipCardController());
     estados.add(true);
   }
