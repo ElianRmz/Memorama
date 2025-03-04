@@ -85,7 +85,8 @@ class _TableroState extends State<Tablero> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('home', (route) => false);
               },
               child: const Text(
                 "Inicio",
@@ -97,6 +98,7 @@ class _TableroState extends State<Tablero> {
       },
     );
   }
+
   void _resetGame() {
     if (_krono != null) {
       _krono!.cancel();
@@ -121,6 +123,7 @@ class _TableroState extends State<Tablero> {
       });
     });
   }
+
   /// Maneja los taps de la barra inferior
   void _onBottomTap(int index) {
     // Si es el botón "Game" (índice 0) y ya estamos en 0, no hacemos nada
@@ -131,7 +134,6 @@ class _TableroState extends State<Tablero> {
     setState(() {
       _selectedIndex = index;
     });
-    
   }
 
   @override
