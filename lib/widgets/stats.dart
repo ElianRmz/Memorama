@@ -15,7 +15,6 @@ class Stats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Opcional: convertir elapsedSeconds a formato mm:ss
     final minutes = (secs ~/ 60).toString().padLeft(2, '0');
     final seconds = (secs % 60).toString().padLeft(2, '0');
 
@@ -30,7 +29,6 @@ class Stats extends StatelessWidget {
             Text("Moves: $moves"),
             Text("Pairs: $paro"),
             Text("Meta: ${baraja.length ~/ 2}"),
-            // Muestra el cronómetro en formato mm:ss
             Text("Time: $minutes:$seconds"),
           ],
         ),

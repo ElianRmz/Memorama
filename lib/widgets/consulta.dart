@@ -11,18 +11,17 @@ class Consulta extends StatefulWidget {
 }
 
 class _ConsultaState extends State<Consulta> {
-  List<Juego> _juegos = []; // Lista de registros de la BD
-  bool _isLoading = true; // Estado de carga
-  int _totalVictorias = 0; // Contador de victorias
-  int _totalDerrotas = 0; // Contador de derrotas
+  List<Juego> _juegos = [];
+  bool _isLoading = true;
+  int _totalVictorias = 0;
+  int _totalDerrotas = 0; 
 
   @override
   void initState() {
     super.initState();
-    _cargarDatos(); // Llamar a la función para obtener los datos
+    _cargarDatos(); 
   }
 
-  /// **✅ Obtener datos y calcular totales**
   Future<void> _cargarDatos() async {
     List<Juego> juegos = await Sqlite.consulta();
 
@@ -48,7 +47,7 @@ class _ConsultaState extends State<Consulta> {
           children: [
             Expanded(
               child: _isLoading
-                  ? const Center(child: CupertinoActivityIndicator()) // Indicador de carga Cupertino
+                  ? const Center(child: CupertinoActivityIndicator())
                   : _juegos.isEmpty
                       ? const Center(child: Text("No hay datos guardados."))
                       : CupertinoScrollbar(

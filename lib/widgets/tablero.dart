@@ -27,16 +27,13 @@ class _TableroState extends State<Tablero> {
   Key _parrillaKey = UniqueKey();
   Timer? _krono;
 
-  // Índice de la barra inferior (0 = Game)
   int _selectedIndex = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     openDB();
   }
 
-  // Inicia/reinicia el cronómetro
   void _zomber() {
     _krono?.cancel();
     secs = 0;
@@ -106,7 +103,6 @@ class _TableroState extends State<Tablero> {
     );
   }
 
-  /// Reinicia el juego
   void _resetGame() {
     _krono?.cancel();
     _krono = null;
@@ -116,7 +112,6 @@ class _TableroState extends State<Tablero> {
       parones = 0;
       secs = 0;
 
-      // Limpiamos los arrays globales para que barajar() cree nuevas cartas y controladores
       controles.clear();
       estados.clear();
       baraja.clear();
@@ -125,15 +120,12 @@ class _TableroState extends State<Tablero> {
       _parrillaKey = UniqueKey();
     });
 
-    // Reiniciamos el cronómetro (si así lo deseas) con un pequeño delay
     Future.delayed(const Duration(milliseconds: 100), () {
       _zomber();
     });
   }
 
-  /// Maneja los taps de la barra inferior
   void _onBottomTap(int index) {
-    // Si es el botón "Game" (índice 0) y ya estamos en 0, no hacemos nada
     if (index == 0 && _selectedIndex == 0) {
       return;
     }
@@ -149,10 +141,8 @@ class _TableroState extends State<Tablero> {
       appBar: AppBar(
         title: Text("Nivel: ${widget.nivel?.name}"),
         actions: [
-          // Botón "Menu" con su callback
           Menu(
             onExit: () {
-              // Cancel the timer when exiting
               _krono?.cancel();
               _krono = null;
             },
@@ -197,10 +187,10 @@ class _TableroState extends State<Tablero> {
 
   Future<void> _registrarVictoria() async {
     final String fechaActual = DateTime.now()
-        .toIso8601String(); // Obtener la fecha actual en formato ISO
+        .toIso8601String(); // fecha en formato ISO
     Juego nuevaPartida = Juego(null, 1, 0, fechaActual);
     debugPrint("Registrado correctamente en la base de datos");
 
-    await Sqlite.add([nuevaPartida]); // Guardar en la base de datos
+    await Sqlite.add([nuevaPartida]); 
   }
 }

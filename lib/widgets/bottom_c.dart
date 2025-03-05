@@ -7,10 +7,8 @@ class BottomC extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  /// Callback opcional para cuando se pulsa "Salir"
   final VoidCallback? onExit;
 
-  /// Callback opcional para cuando se pulsa "Reiniciar"
   final VoidCallback? onReset;
 
   const BottomC({
@@ -33,7 +31,6 @@ class _BottomCState extends State<BottomC> {
       activeColor: Colors.blue,
       inactiveColor: Colors.blueGrey,
       onTap: (int index) async {
-        // Botón "Salir" (índice 1)
         if (index == 1) {
           final confirmacion = await _mensajeConfirmacion(
             context,
@@ -46,20 +43,17 @@ class _BottomCState extends State<BottomC> {
             Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
           }
 
-        // Botón "Reiniciar" (índice 2)
         } else if (index == 2) {
           final confirmacion = await _mensajeConfirmacion(
             context,
             "¿Deseas reiniciar el juego?",
           );
           if (confirmacion) {
-            // Llama a onReset si está definido
             if (widget.onReset != null) {
               widget.onReset!();
             }
           }
 
-        // Botón "Juego nuevo" (índice 3)
         } else if (index == 3) {
           final confirmacion = await _mensajeConfirmacion(
             context,
@@ -69,7 +63,6 @@ class _BottomCState extends State<BottomC> {
             if (widget.onReset != null) {
               widget.onReset!();
             }
-            // ✅ Guardar derrota en la base de datos
             await _registrarDerrota();
           }
 
@@ -98,12 +91,11 @@ class _BottomCState extends State<BottomC> {
     );
   }
 
-  /// **✅ Método para guardar una derrota en la base de datos**
   Future<void> _registrarDerrota() async {
-    final String fechaActual = DateTime.now().toIso8601String(); // Obtener fecha actual
-    Juego nuevaDerrota = Juego(null, 0, 1, fechaActual); // 0 victorias, 1 derrota
+    final String fechaActual = DateTime.now().toIso8601String(); 
+    Juego nuevaDerrota = Juego(null, 0, 1, fechaActual); 
 
-    await Sqlite.add([nuevaDerrota]); // Insertar en la base de datos
+    await Sqlite.add([nuevaDerrota]);
     debugPrint("Derrota registrada correctamente en la base de datos");
   }
 

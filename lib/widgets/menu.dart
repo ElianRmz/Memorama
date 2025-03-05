@@ -112,7 +112,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
-      child: const Icon(CupertinoIcons.ellipsis), // Icono de menú
+      child: const Icon(CupertinoIcons.ellipsis),
       onPressed: () => _showCupertinoMenu(context),
     );
   }
