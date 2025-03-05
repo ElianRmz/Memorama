@@ -27,26 +27,48 @@ class _BottomCState extends State<BottomC> {
       currentIndex: widget.selectedIndex,
       activeColor: Colors.blue,
       inactiveColor: Colors.blueGrey,
-      onTap: (int index) {
-        // Si se pulsa la pestaña 1 ("Salir")
+
+      // Hacemos asíncrono onTap para poder esperar la confirmación
+      onTap: (int index) async {
+        // Manejo de la pestaña "Salir" (índice 1)
         if (index == 1) {
           debugPrint("Botón Salir pulsado");
 
-          // Llama a onExit (si está definido)
-          if (widget.onExit != null) {
-            widget.onExit!();
+          // Primero mostramos el diálogo de confirmación
+          final confirmacion = await _mensajeConfirmacion(
+            context,
+            "¿Desea regresar al inicio?",
+          );
+
+          // Si el usuario confirma:
+          if (confirmacion) {
+            // Llama a onExit si está definido
+            if (widget.onExit != null) {
+              widget.onExit!();
+            }
+            // Navega a 'home' y limpia el stack de navegación
+            Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
           }
 
-          // Cierra la pantalla actual (si hay un Navigator)
-          Navigator.pop(context);
+          // Si no confirma, no hacemos nada (se queda en la misma pantalla)
 
-          // Navega a la ruta 'home' y elimina el stack de navegación
-          Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+        } else if (index == 2) {
+          // Lógica para "Reiniciar"
+          debugPrint("Botón Reiniciar pulsado");
+          // TODO: Implementa tu acción para reiniciar
+
+        } else if (index == 3) {
+          // Lógica para "Juego nuevo"
+          debugPrint("Botón Juego nuevo pulsado");
+          // TODO: Implementa tu acción para juego nuevo
+
         } else {
-          // Para las demás pestañas, llamamos a onTap para la lógica normal
+          // Para cualquier otro índice (por ejemplo, 0 = "Game"),
+          // delegamos a la lógica normal (widget.onTap)
           widget.onTap(index);
         }
       },
+
       items: const [
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.square_stack_3d_down_right),
@@ -66,5 +88,35 @@ class _BottomCState extends State<BottomC> {
         ),
       ],
     );
+  }
+
+  /// Muestra un diálogo de confirmación con estilo Cupertino
+  /// Retorna true si el usuario acepta, false en caso contrario.
+  Future<bool> _mensajeConfirmacion(BuildContext context, String s) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text("Confirmación"),
+          content: Text(s),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text(
+                "Aceptar",
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () => Navigator.pop(context, true),
+            ),
+            CupertinoDialogAction(
+              child: const Text(
+                "Cancelar",
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () => Navigator.pop(context, false),
+            )
+          ],
+        );
+      },
+    ) ?? false;
   }
 }

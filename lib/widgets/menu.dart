@@ -41,7 +41,7 @@ class Menu extends StatelessWidget {
           CupertinoActionSheetAction(
               onPressed: () async {
                 dynamic confirmacion = await _mensajeConfirmacion(
-                    context, "Desea regresar al incio?");
+                    context, "Desea ver las stats?");
                 if (confirmacion) {
                   if (onExit != null) onExit!();
                   Navigator.pop(context);
