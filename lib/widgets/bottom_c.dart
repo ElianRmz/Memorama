@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:memo/db/juego.dart'; // Importamos el modelo de juego
+import 'package:memo/db/sqlite.dart'; // Importamos la base de datos
 
 class BottomC extends StatefulWidget {
   final int selectedIndex;
@@ -44,7 +46,7 @@ class _BottomCState extends State<BottomC> {
             Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
           }
 
-          // Botón "Reiniciar" (índice 2)
+        // Botón "Reiniciar" (índice 2)
         } else if (index == 2) {
           final confirmacion = await _mensajeConfirmacion(
             context,
@@ -55,11 +57,9 @@ class _BottomCState extends State<BottomC> {
             if (widget.onReset != null) {
               widget.onReset!();
             }
-            // NO hacemos Navigator.pop(context) aquí
-            // para NO salir de Tablero
           }
 
-          // Botón "Juego nuevo" (índice 3)
+        // Botón "Juego nuevo" (índice 3)
         } else if (index == 3) {
           final confirmacion = await _mensajeConfirmacion(
             context,
@@ -69,7 +69,8 @@ class _BottomCState extends State<BottomC> {
             if (widget.onReset != null) {
               widget.onReset!();
             }
-            // TODO: Lógica para "Juego nuevo"
+            // ✅ Guardar derrota en la base de datos
+            await _registrarDerrota();
           }
 
         } else {
@@ -95,6 +96,15 @@ class _BottomCState extends State<BottomC> {
         ),
       ],
     );
+  }
+
+  /// **✅ Método para guardar una derrota en la base de datos**
+  Future<void> _registrarDerrota() async {
+    final String fechaActual = DateTime.now().toIso8601String(); // Obtener fecha actual
+    Juego nuevaDerrota = Juego(null, 0, 1, fechaActual); // 0 victorias, 1 derrota
+
+    await Sqlite.add([nuevaDerrota]); // Insertar en la base de datos
+    debugPrint("Derrota registrada correctamente en la base de datos");
   }
 
   Future<bool> _mensajeConfirmacion(BuildContext context, String s) async {
