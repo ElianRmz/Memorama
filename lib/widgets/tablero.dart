@@ -1,3 +1,6 @@
+import 'package:memo/db/juego.dart';
+import 'package:memo/db/sqlite.dart';
+
 import 'bottom_c.dart';
 import 'dart:async';
 import 'package:bottom_cupertino_tabbar/bottom_cupertino_tabbar.dart';
@@ -17,6 +20,7 @@ class Tablero extends StatefulWidget {
 }
 
 class _TableroState extends State<Tablero> {
+  List<Juego>? juego;
   int moves = 0;
   int parones = 0;
   int secs = 0;
@@ -25,6 +29,12 @@ class _TableroState extends State<Tablero> {
 
   // Índice de la barra inferior (0 = Game)
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    openDB();
+  }
 
   // Inicia/reinicia el cronómetro
   void _zomber() {
@@ -61,6 +71,7 @@ class _TableroState extends State<Tablero> {
     if (parones == baraja.length ~/ 2) {
       _krono?.cancel();
       _mensajeVictoria();
+      _registrarVictoria();
     }
   }
 
@@ -79,7 +90,8 @@ class _TableroState extends State<Tablero> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('home', (route) => false);
               },
               child: const Text(
                 "Inicio",
@@ -175,5 +187,18 @@ class _TableroState extends State<Tablero> {
         onReset: _resetGame,
       ),
     );
+  }
+
+  Future<void> openDB() async {
+    await Sqlite.db();
+  }
+
+  Future<void> _registrarVictoria() async {
+    final String fechaActual = DateTime.now()
+        .toIso8601String(); // Obtener la fecha actual en formato ISO
+    Juego nuevaPartida = Juego(null, 1, 0, fechaActual);
+    debugPrint("Registrado correctamente en la base de datos");
+
+    await Sqlite.add([nuevaPartida]); // Guardar en la base de datos
   }
 }
