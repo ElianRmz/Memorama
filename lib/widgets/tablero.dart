@@ -57,7 +57,9 @@ class _TableroState extends State<Tablero> {
   }
 
   void movio() {
-    setState(() => moves++);
+     setState(() {
+       moves++;
+     });
   }
 
   void encontro() {

@@ -95,7 +95,7 @@ class _ParrillaState extends State<Parrilla> {
             controller: controles[index],
             onFlip: () {
               if (!volteon && (habilitado ?? false)) {
-                widget.volt();
+                // widget.volt();
               } else {
                 return;
               }
@@ -119,6 +119,7 @@ class _ParrillaState extends State<Parrilla> {
                     habilitado = true;
                   });
                 } else {
+                  widget.volt();
                   Future.delayed(const Duration(seconds: 1), () {
                     setState(() {
                       habilitado = false;
