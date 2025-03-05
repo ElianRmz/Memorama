@@ -1,4 +1,3 @@
-import 'package:bottom_cupertino_tabbar/bottom_cupertino_tabbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,11 +8,15 @@ class BottomC extends StatefulWidget {
   /// Callback opcional para cuando se pulsa "Salir"
   final VoidCallback? onExit;
 
+  /// Callback opcional para cuando se pulsa "Reiniciar"
+  final VoidCallback? onReset;
+
   const BottomC({
     Key? key,
     required this.selectedIndex,
     required this.onTap,
     this.onExit,
+    this.onReset,
   }) : super(key: key);
 
   @override
@@ -27,48 +30,52 @@ class _BottomCState extends State<BottomC> {
       currentIndex: widget.selectedIndex,
       activeColor: Colors.blue,
       inactiveColor: Colors.blueGrey,
-
-      // Hacemos asíncrono onTap para poder esperar la confirmación
       onTap: (int index) async {
-        // Manejo de la pestaña "Salir" (índice 1)
+        // Botón "Salir" (índice 1)
         if (index == 1) {
-          debugPrint("Botón Salir pulsado");
-
-          // Primero mostramos el diálogo de confirmación
           final confirmacion = await _mensajeConfirmacion(
             context,
             "¿Desea regresar al inicio?",
           );
-
-          // Si el usuario confirma:
           if (confirmacion) {
-            // Llama a onExit si está definido
             if (widget.onExit != null) {
               widget.onExit!();
             }
-            // Navega a 'home' y limpia el stack de navegación
             Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
           }
 
-          // Si no confirma, no hacemos nada (se queda en la misma pantalla)
-
+          // Botón "Reiniciar" (índice 2)
         } else if (index == 2) {
-          // Lógica para "Reiniciar"
-          debugPrint("Botón Reiniciar pulsado");
-          // TODO: Implementa tu acción para reiniciar
+          final confirmacion = await _mensajeConfirmacion(
+            context,
+            "¿Deseas reiniciar el juego?",
+          );
+          if (confirmacion) {
+            // Llama a onReset si está definido
+            if (widget.onReset != null) {
+              widget.onReset!();
+            }
+            // NO hacemos Navigator.pop(context) aquí
+            // para NO salir de Tablero
+          }
 
+          // Botón "Juego nuevo" (índice 3)
         } else if (index == 3) {
-          // Lógica para "Juego nuevo"
-          debugPrint("Botón Juego nuevo pulsado");
-          // TODO: Implementa tu acción para juego nuevo
+          final confirmacion = await _mensajeConfirmacion(
+            context,
+            "¿Deseas iniciar un juego nuevo?",
+          );
+          if (confirmacion) {
+            if (widget.onReset != null) {
+              widget.onReset!();
+            }
+            // TODO: Lógica para "Juego nuevo"
+          }
 
         } else {
-          // Para cualquier otro índice (por ejemplo, 0 = "Game"),
-          // delegamos a la lógica normal (widget.onTap)
           widget.onTap(index);
         }
       },
-
       items: const [
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.square_stack_3d_down_right),
@@ -90,8 +97,6 @@ class _BottomCState extends State<BottomC> {
     );
   }
 
-  /// Muestra un diálogo de confirmación con estilo Cupertino
-  /// Retorna true si el usuario acepta, false en caso contrario.
   Future<bool> _mensajeConfirmacion(BuildContext context, String s) async {
     return await showDialog<bool>(
       context: context,
@@ -101,19 +106,13 @@ class _BottomCState extends State<BottomC> {
           content: Text(s),
           actions: [
             CupertinoDialogAction(
-              child: const Text(
-                "Aceptar",
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text("Aceptar", style: TextStyle(color: Colors.red)),
               onPressed: () => Navigator.pop(context, true),
             ),
             CupertinoDialogAction(
-              child: const Text(
-                "Cancelar",
-                style: TextStyle(color: Colors.blue),
-              ),
+              child: const Text("Cancelar", style: TextStyle(color: Colors.blue)),
               onPressed: () => Navigator.pop(context, false),
-            )
+            ),
           ],
         );
       },

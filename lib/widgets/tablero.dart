@@ -31,9 +31,7 @@ class _TableroState extends State<Tablero> {
     _krono?.cancel();
     secs = 0;
     _krono = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        secs++;
-      });
+      setState(() => secs++);
     });
   }
 
@@ -49,19 +47,17 @@ class _TableroState extends State<Tablero> {
   }
 
   void movio() {
-    setState(() {
-      moves++;
-    });
+    setState(() => moves++);
   }
 
   void encontro() {
     setState(() {
       parones++;
-      _maldito_elian_pone_bien_feas_los_nombre_de_las_variables_y_huele_feo();
+      _verificarGanador();
     });
   }
 
-  void _maldito_elian_pone_bien_feas_los_nombre_de_las_variables_y_huele_feo() {
+  void _verificarGanador() {
     if (parones == baraja.length ~/ 2) {
       _krono?.cancel();
       _mensajeVictoria();
@@ -69,10 +65,8 @@ class _TableroState extends State<Tablero> {
   }
 
   void _mensajeVictoria() {
-    if (_krono != null) {
-      _krono!.cancel();
-      _krono = null;
-    }
+    _krono?.cancel();
+    _krono = null;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -85,8 +79,7 @@ class _TableroState extends State<Tablero> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('home', (route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
               },
               child: const Text(
                 "Inicio",
@@ -99,28 +92,28 @@ class _TableroState extends State<Tablero> {
     );
   }
 
+  /// Reinicia el juego
   void _resetGame() {
-    if (_krono != null) {
-      _krono!.cancel();
-      _krono = null;
-    }
+    _krono?.cancel();
+    _krono = null;
 
     setState(() {
       moves = 0;
       parones = 0;
       secs = 0;
 
-      // Revisar si se tiene que limpiar o puedo resetearlo con lo de arriba.
+      // Limpiamos los arrays globales para que barajar() cree nuevas cartas y controladores
       controles.clear();
       estados.clear();
       baraja.clear();
 
-      _parrillaKey = UniqueKey(); // Se hace otra key para reiniciar
+      // Cambiamos la key para forzar que Parrilla se reconstruya completamente
+      _parrillaKey = UniqueKey();
+    });
 
-      // Restart the timer after a short delay
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _zomber();
-      });
+    // Reiniciamos el cronómetro (si así lo deseas) con un pequeño delay
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _zomber();
     });
   }
 
@@ -142,22 +135,18 @@ class _TableroState extends State<Tablero> {
       appBar: AppBar(
         title: Text("Nivel: ${widget.nivel?.name}"),
         actions: [
-          // Mantienes tu botón "Menu" con su callback
+          // Botón "Menu" con su callback
           Menu(
             onExit: () {
               // Cancel the timer when exiting
-              if (_krono != null) {
-                _krono!.cancel();
-                _krono = null;
-              }
+              _krono?.cancel();
+              _krono = null;
             },
             nivel: widget.nivel,
             onReset: _resetGame,
           )
         ],
       ),
-
-      // Tu contenido principal
       body: Column(
         children: [
           Stats(
@@ -167,8 +156,8 @@ class _TableroState extends State<Tablero> {
           ),
           Expanded(
             child: Parrilla(
-              nivel: widget.nivel,
               key: _parrillaKey,
+              nivel: widget.nivel,
               volt: movio,
               bonjorno: encontro,
               fini: fini,
@@ -176,14 +165,14 @@ class _TableroState extends State<Tablero> {
           ),
         ],
       ),
-
-      // En vez de bottomSheet, usamos bottomNavigationBar
       bottomNavigationBar: BottomC(
         selectedIndex: _selectedIndex,
         onTap: _onBottomTap,
         onExit: () {
           _krono?.cancel();
+          _krono = null;
         },
+        onReset: _resetGame,
       ),
     );
   }
