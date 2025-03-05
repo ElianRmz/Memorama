@@ -47,7 +47,9 @@ class _TableroState extends State<Tablero> {
   }
 
   void movio() {
-    setState(() => moves++);
+     setState(() {
+       moves++;
+     });
   }
 
   void encontro() {
@@ -79,7 +81,8 @@ class _TableroState extends State<Tablero> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('home', (route) => false);
               },
               child: const Text(
                 "Inicio",
